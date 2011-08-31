@@ -32,20 +32,23 @@
  */
 package org.jahia.modules.actions;
 
-import org.apache.log4j.Logger;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.rules.BackgroundAction;
 import org.jahia.services.render.filter.cache.ModuleCacheProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 
 /**
+ * Background action that invalidates output caches for the node, having start/end date visibility condition.
+ * 
  * @author rincevent
  * @since JAHIA 6.6
  * Created : 8/29/11
  */
 public abstract class DateVisibilityConditionBackgroundAction implements BackgroundAction {
-    private transient static Logger logger = Logger.getLogger(DateVisibilityConditionBackgroundAction.class);
+    private transient static Logger logger = LoggerFactory.getLogger(DateVisibilityConditionBackgroundAction.class);
     private ModuleCacheProvider cacheProvider;
 
     public void setCacheProvider(ModuleCacheProvider cacheProvider) {
