@@ -93,6 +93,6 @@ rule "Flush cache when forceMatchAllConditions is changed"
         A property j:forceMatchAllConditions has been set on a node
 		   - the node has the type jnt:conditionalVisibility
     then
-		Log "Trololo"
+		Log "Visibility settings were changed. Flushing caches on node " + node.getPath()
         Execute the action "forceMatchAllConditionsVisibilityAction" now on the node
 end
