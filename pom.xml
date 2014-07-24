@@ -84,9 +84,9 @@
   <name>Jahia Visibility</name>
   <description>Jahia visibility framework.</description>
   <scm>
-    <connection>scm:svn:https://devtools.jahia.com/svn/jahia/tags/JAHIA_7.0.0.2-SNAPSHOT/modules/visibility</connection>
-    <developerConnection>scm:svn:https://devtools.jahia.com/svn/jahia/tags/JAHIA_7.0.0.2-SNAPSHOT/modules/visibility</developerConnection>
-    <url>https://devtools.jahia.com/svn/jahia/tags/JAHIA_7.0.0.2-SNAPSHOT/modules/visibility</url>
+    <connection>scm:svn:https://devtools.jahia.com/svn/jahia/branches/JAHIA-7-0-X-X-BRANCH/modules/visibility</connection>
+    <developerConnection>scm:svn:https://devtools.jahia.com/svn/jahia/branches/JAHIA-7-0-X-X-BRANCH/modules/visibility</developerConnection>
+    <url>https://devtools.jahia.com/svn/jahia/branches/JAHIA-7-0-X-X-BRANCH/modules/visibility</url>
   </scm>
   <repositories>
     <repository>
