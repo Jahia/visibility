@@ -66,12 +66,12 @@
         <property name="jobDetail">
             <bean class="org.springframework.scheduling.quartz.JobDetailBean">
                 <property name="name" value="VisibilityActionPurgeJob" />
-                <property name="jobClass" value="org.jahia.modules.visibility.rules.VisibilityActionPurgeJob" />
+                <property name="jobClass" value="org.jahia.services.content.rules.OrphanedActionPurgeJob" />
                 <property name="group" value="Maintenance" />
                 <property name="description" value="Cancels (unschedules) and removes orphaned visibility action jobs in case the corresponding node is no longer present" />
                 <property name="jobDataAsMap">
                     <map>
-                        <entry key="visibilityJobGroupNames">
+                        <entry key="jobGroupNames">
                             <set>
                                 <value>ActionJob.startDateVisibilityAction</value>
                                 <value>ActionJob.endDateVisibilityAction</value>
