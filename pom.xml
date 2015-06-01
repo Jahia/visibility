@@ -72,17 +72,16 @@
         For more information, please visit http://www.jahia.com
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jahia.modules</groupId>
         <artifactId>jahia-modules</artifactId>
-        <version>7.1.0.0-SNAPSHOT</version>
-        <relativePath/>
+        <version>7.1.0.0-RC</version>
+        <relativePath />
     </parent>
     <artifactId>visibility</artifactId>
-	<version>7.1.0-SNAPSHOT</version>
+	<version>7.1.0-RC</version>
     <packaging>bundle</packaging>
     <name>Jahia Visibility</name>
     <description>Jahia visibility framework.</description>
@@ -90,7 +89,8 @@
         <connection>scm:git:git@github.com:Jahia/visibility.git</connection>
         <developerConnection>scm:git:git@github.com:Jahia/visibility.git</developerConnection>
         <url>https://github.com/Jahia/visibility</url>
-    </scm>
+      <tag>7_1_0_RC</tag>
+  </scm>
 
     <properties>
         <jahia-module-type>system</jahia-module-type>
