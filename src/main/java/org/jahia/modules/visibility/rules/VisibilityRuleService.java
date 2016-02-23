@@ -49,7 +49,6 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.drools.core.spi.KnowledgeHelper;
-import org.jahia.services.content.JCRContentUtils;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.rules.AddedNodeFact;
 import org.jahia.services.visibility.VisibilityService;
@@ -124,14 +123,17 @@ public class VisibilityRuleService {
                 JCRNodeWrapper visibilityNode = node.hasNode(VisibilityService.NODE_NAME) ? node
                         .getNode(VisibilityService.NODE_NAME) : node.addNode(
                         VisibilityService.NODE_NAME, "jnt:conditionalVisibility");
-                JCRNodeWrapper cond = visibilityNode.addNode(
-                        JCRContentUtils.findAvailableNodeName(node, "startEndDateCondition"),
-                        "jnt:startEndDateCondition");
-                if (dates[0] != null) {
-                    cond.setProperty("start", dates[0]);
-                }
-                if (dates[1] != null) {
-                    cond.setProperty("end", dates[1]);
+                if (!visibilityNode.hasNode("startEndDateCondition")) {
+                    JCRNodeWrapper cond = visibilityNode.addNode("startEndDateCondition", "jnt:startEndDateCondition");
+                    if (dates[0] != null) {
+                        cond.setProperty("start", dates[0]);
+                    }
+                    if (dates[1] != null) {
+                        cond.setProperty("end", dates[1]);
+                    }
+                } else {
+                    logger.debug("Node {} already contains a visibility condition of type jnt:startEndDateCondition."
+                            + " Skip this one", path);
                 }
 
                 if (node.hasProperty("j:legacyRuleSettings")) {
