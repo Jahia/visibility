@@ -9,6 +9,7 @@
     <bean id="abstractFlushCacheOnVisibilityNodeBackgroundAction" parent="abstractFlushCacheOnNodeBackgroundAction" abstract="true">
         <property name="startLevel" value="2"/>
         <property name="levelsUp" value="1"/>
+        <property name="eventMessage" value="visibilityChange"/>
     </bean>
     
     <bean parent="abstractFlushCacheOnVisibilityNodeBackgroundAction">
