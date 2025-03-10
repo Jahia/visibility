@@ -66,8 +66,8 @@ import org.slf4j.LoggerFactory;
  * Created : 8/29/11
  */
 public class StartEndDateConditionRuleImpl extends BaseVisibilityConditionRule {
-    
-    private transient static Logger logger = LoggerFactory.getLogger(StartEndDateConditionRuleImpl.class);
+
+    private transient static Logger LOGGER = LoggerFactory.getLogger(StartEndDateConditionRuleImpl.class);
 
     /**
      * Return the associated display template that will be used by gwt.
@@ -84,16 +84,16 @@ public class StartEndDateConditionRuleImpl extends BaseVisibilityConditionRule {
         try {
             start = nodeWrapper.getProperty("start").getValue().getDate();
         } catch (PathNotFoundException e) {
-            logger.debug("start is not defined for this rule");
+            LOGGER.debug("start is not defined for this rule");
         } catch (RepositoryException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         try {
             end = nodeWrapper.getProperty("end").getValue().getDate();
         } catch (PathNotFoundException e) {
-            logger.debug("end is not defined for this rule");
+            LOGGER.debug("end is not defined for this rule");
         } catch (RepositoryException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         Calendar calendar = null;
         try {
