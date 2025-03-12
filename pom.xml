@@ -49,11 +49,11 @@
     <parent>
         <groupId>org.jahia.modules</groupId>
         <artifactId>jahia-modules</artifactId>
-        <version>8.0.0.0</version>
+        <version>8.2.0.0</version>
         <relativePath />
     </parent>
     <artifactId>visibility</artifactId>
-	<version>8.1.0-SNAPSHOT</version>
+	<version>8.2.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Jahia Visibility</name>
     <description>Jahia visibility framework.</description>
@@ -66,7 +66,7 @@
 
     <properties>
         <jahia-module-type>system</jahia-module-type>
-        <jahia-module-signature>MCwCFEIOrYHjNsZU4gajANdNNjYvHVXPAhRZ368+9Al+KQ3JFUbVgPrYTPckJg==</jahia-module-signature>
+        <jahia-module-signature>MC0CFHcW17h+hR5jcCnt0uhcfCH6WGR5AhUAkA2pXQZcYs2yhs8EVUdFAzRyBw0=</jahia-module-signature>
         <require-capability>osgi.extender;filter:="(osgi.extender=org.jahia.bundles.blueprint.extender.config)"</require-capability>
     </properties>
 

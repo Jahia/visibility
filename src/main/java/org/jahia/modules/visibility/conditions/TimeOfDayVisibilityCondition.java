@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.ValueFormatException;
 import java.util.Calendar;
 import java.util.Locale;
 
