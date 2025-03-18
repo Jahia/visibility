@@ -51,7 +51,10 @@ import org.dom4j.io.SAXReader;
 import org.drools.core.spi.KnowledgeHelper;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.rules.AddedNodeFact;
+import org.jahia.services.content.rules.ModuleGlobalObject;
 import org.jahia.services.visibility.VisibilityService;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,16 +67,24 @@ import java.util.Calendar;
  *
  * @author Sergiy Shyrkov
  */
-public class VisibilityRuleService {
+@Component(service = ModuleGlobalObject.class, name="visibilityService")
+public class VisibilityRuleService extends ModuleGlobalObject {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(VisibilityRuleService.class);
 
     private static final String INHERIT_FROM_PARENT = "inherit-from-parent";
-    private static Logger logger = LoggerFactory.getLogger(VisibilityRuleService.class);
     private static final String RULE_START_AND_END_DATE = "START_AND_END_DATE";
     private static final String RULE_TYPE_EL = "rule-type";
     private static final String VALID_FROM_DATE_EL = "valid-from-date";
     private static final String VALID_TO_DATE_EL = "valid-to-date";
 
     private VisibilityService visibilityService;
+
+    @Activate
+    public void start() throws Exception {
+        visibilityService = VisibilityService.getInstance();
+        LOGGER.info("VisibilityRuleService started");
+    }
 
     /**
      * Creates a visibility condition on the node, based on the legacy (Jahia 5.0.x and 6.0.x/6.1.x) rule settings, serialized in XML
@@ -88,32 +99,32 @@ public class VisibilityRuleService {
                                          final String ruleSettingsXml, KnowledgeHelper drools) throws RepositoryException {
         String path = nodeFact.getPath();
         if (StringUtils.isEmpty(ruleSettingsXml)) {
-            logger.warn(
+            LOGGER.warn(
                     "No rule settings found. Skip importing legacy visibility settings for node {}.",
                     path);
         }
 
         if (!visibilityService.getConditions().containsKey("jnt:startEndDateCondition")) {
             // we currently only support migration for "start and end date" rules
-            logger.warn("Cannot find visibility condition definition of type {}."
+            LOGGER.warn("Cannot find visibility condition definition of type {}."
                     + " Skip importing legacy settings for node {}", "jnt:startEndDateCondition",
                     path);
             return;
         }
 
-        if (logger.isInfoEnabled()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Importing legacy visibility settings for node {} using value {}",
+        if (LOGGER.isInfoEnabled()) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Importing legacy visibility settings for node {} using value {}",
                         path, ruleSettingsXml);
             } else {
-                logger.info("Importing legacy visibility settings for node {}", path);
+                LOGGER.info("Importing legacy visibility settings for node {}", path);
             }
         }
 
         Calendar[] dates = parseStartAndEndDates(ruleSettingsXml);
         if (dates != null) {
-            if (logger.isInfoEnabled()) {
-                logger.info("Adding visibility condition for node {} with"
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Adding visibility condition for node {} with"
                         + " start date '{}' and end date '{}'",
                         new Object[]{path, dates[0] != null ? dates[0].getTime() : null,
                                 dates[1] != null ? dates[1].getTime() : null});
@@ -132,7 +143,7 @@ public class VisibilityRuleService {
                         cond.setProperty("end", dates[1]);
                     }
                 } else {
-                    logger.debug("Node {} already contains a visibility condition of type jnt:startEndDateCondition."
+                    LOGGER.debug("Node {} already contains a visibility condition of type jnt:startEndDateCondition."
                             + " Skip this one", path);
                 }
 
@@ -140,7 +151,7 @@ public class VisibilityRuleService {
                     node.getProperty("j:legacyRuleSettings").remove();
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }
@@ -183,16 +194,16 @@ public class VisibilityRuleService {
                             dates = new Calendar[]{start, end};
                         }
                     } else if (el != null) {
-                        logger.warn("Unknown visibility type {}. Skipping.", el.getText());
+                        LOGGER.warn("Unknown visibility type {}. Skipping.", el.getText());
                     }
                 }
             }
         } catch (DocumentException e) {
-            logger.error("Error reading legcy rule settings: \n" + ruleSettingsXml, e);
+            LOGGER.error("Error reading legcy rule settings: \n" + ruleSettingsXml, e);
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Parsed visibility dates: {}", dates);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Parsed visibility dates: {}", dates);
         }
 
         return dates;

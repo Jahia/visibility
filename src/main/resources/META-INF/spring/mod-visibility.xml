@@ -10,6 +10,10 @@
         <property name="eventMessage" value="visibilityChange"/>
     </bean>
 
+    <bean parent="abstractFlushCacheOnNodeBackgroundAction">
+        <property name="name" value="abstractFlushCacheOnVisibilityNodeBackgroundAction"/>
+    </bean>
+
     <bean parent="abstractFlushCacheOnVisibilityNodeBackgroundAction">
         <property name="name" value="startDateVisibilityAction"/>
     </bean>
@@ -29,10 +33,6 @@
     </bean>
     <bean parent="abstractFlushCacheOnVisibilityNodeBackgroundAction">
         <property name="name" value="endTimeOfDayVisibilityAction"/>
-    </bean>
-
-    <bean parent="abstractFlushCacheOnNodeBackgroundAction">
-        <property name="name" value="abstractFlushCacheOnVisibilityNodeBackgroundAction"/>
     </bean>
 
     <bean parent="abstractFlushCacheOnNodeBackgroundAction">
@@ -84,46 +84,4 @@
         </property>
     </bean>
 
-    <bean class="org.jahia.services.content.rules.ModuleGlobalObject">
-        <property name="globalRulesObject">
-            <map>
-                <entry key="visibilityService">
-                    <bean class="org.jahia.modules.visibility.rules.VisibilityRuleService">
-                        <property name="visibilityService" ref="visibilityService"/>
-                    </bean>
-                </entry>
-            </map>
-        </property>
-    </bean>
-
-    <bean parent="jobSchedulingBean">
-        <property name="jobDetail">
-            <bean class="org.springframework.scheduling.quartz.JobDetailBean">
-                <property name="name" value="VisibilityActionPurgeJob" />
-                <property name="jobClass" value="org.jahia.modules.visibility.rules.VisibilityActionPurgeJob" />
-                <property name="group" value="Maintenance" />
-                <property name="description" value="Cancels (unschedules) and removes orphaned visibility action jobs in case the corresponding node is no longer present" />
-                <property name="jobDataAsMap">
-                    <map>
-                        <entry key="jobGroupNames">
-                            <set>
-                                <value>ActionJob.startDateVisibilityAction</value>
-                                <value>ActionJob.endDateVisibilityAction</value>
-                                <value>ActionJob.startDayOfWeekVisibilityAction</value>
-                                <value>ActionJob.endDayOfWeekVisibilityAction</value>
-                                <value>ActionJob.startTimeOfDayVisibilityAction</value>
-                                <value>ActionJob.endTimeOfDayVisibilityAction</value>
-                            </set>
-                        </entry>
-                    </map>
-                </property>
-            </bean>
-        </property>
-        <property name="trigger">
-            <bean class="org.quartz.CronTrigger">
-                <property name="name" value="VisibilityActionPurgeJobTrigger"/>
-                <property name="cronExpression" value="0 5 * * * ?"/>
-            </bean>
-        </property>
-    </bean>
 </beans>
