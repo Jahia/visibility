@@ -8,9 +8,6 @@
         <property name="startLevel" value="2"/>
         <property name="levelsUp" value="1"/>
         <property name="eventMessage" value="visibilityChange"/>
-    </bean>
-
-    <bean parent="abstractFlushCacheOnNodeBackgroundAction">
         <property name="name" value="abstractFlushCacheOnVisibilityNodeBackgroundAction"/>
     </bean>
 
