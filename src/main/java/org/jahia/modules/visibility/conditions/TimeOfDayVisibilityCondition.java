@@ -34,9 +34,7 @@ public class TimeOfDayVisibilityCondition extends BaseVisibilityConditionRule {
                 intValue = Integer.parseInt(val);
             }
         } catch (PathNotFoundException e) {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("{} is not defined for this condition on the node {}", propertyName, node.getPath());
-            }
+            LOGGER.debug("{} is not defined for this condition on the node {}", propertyName, node.getPath());
         } catch (NumberFormatException e) {
             LOGGER.warn("Error parsing the value of the property {} for this condition on the node {}. Cause: {}", propertyName, node.getPath(), e.getMessage());
         }
@@ -75,9 +73,7 @@ public class TimeOfDayVisibilityCondition extends BaseVisibilityConditionRule {
         visible = (startHour < hour || (startHour == hour && startMinute <= minute))
                 && (endHour > hour || (endHour == hour && endMinute > minute));
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Time of the day condition with time '{}:{}-{}:{}' on node {} evaluated to {}", startHour, startMinute, endHour, endMinute, node.getPath(), visible);
-        }
+        LOGGER.debug("Time of the day condition with time '{}:{}-{}:{}' on node {} evaluated to {}", startHour, startMinute, endHour, endMinute, node.getPath(), visible);
 
         return visible;
     }

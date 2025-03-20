@@ -45,9 +45,7 @@ public class DayOfWeekVisibilityCondition extends BaseVisibilityConditionRule {
                 }
             }
         } catch (PathNotFoundException e) {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("dayOfWeek is not defined for this condition on the node {}", node.getPath());
-            }
+            LOGGER.debug("dayOfWeek is not defined for this condition on the node {}", node.getPath());
         } catch (RepositoryException e) {
             LOGGER.error("Error reading day of the week settings for the visibility condition node {} Cause: {}", node.getPath(), e.getMessage(), e);
         }

@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -156,12 +157,9 @@ public class VisibilityRuleService extends ModuleGlobalObject {
                 }
             }
         } catch (DocumentException e) {
-            LOGGER.error("Error reading legcy rule settings: \n" + ruleSettingsXml, e);
+            LOGGER.error("Error reading legacy rule settings: \n{}", ruleSettingsXml, e);
         }
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Parsed visibility dates: {}", dates);
-        }
+        LOGGER.debug("Parsed visibility dates: {}", Arrays.deepToString(dates));
 
         return dates;
     }

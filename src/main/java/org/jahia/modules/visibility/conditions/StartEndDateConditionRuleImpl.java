@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class StartEndDateConditionRuleImpl extends BaseVisibilityConditionRule {
 
-    private transient static Logger LOGGER = LoggerFactory.getLogger(StartEndDateConditionRuleImpl.class);
+    private final transient static Logger LOGGER = LoggerFactory.getLogger(StartEndDateConditionRuleImpl.class);
 
     /**
      * Return the associated display template that will be used by gwt.
@@ -55,7 +55,7 @@ public class StartEndDateConditionRuleImpl extends BaseVisibilityConditionRule {
         Calendar calendar = null;
         try {
             calendar = nodeWrapper.getSession().getPreviewDate();
-        } catch (RepositoryException e) {
+        } catch (RepositoryException ignored) {
         }
         if (calendar == null) {
             calendar = Calendar.getInstance();
