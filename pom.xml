@@ -8,7 +8,7 @@
         <relativePath />
     </parent>
     <artifactId>visibility</artifactId>
-	<version>9.0.0</version>
+	<version>9.1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Jahia Visibility</name>
     <description>Jahia visibility framework.</description>
@@ -16,7 +16,7 @@
         <connection>scm:git:git@github.com:Jahia/visibility.git</connection>
         <developerConnection>scm:git:git@github.com:Jahia/visibility.git</developerConnection>
         <url>https://github.com/Jahia/visibility</url>
-        <tag>9_0_0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
