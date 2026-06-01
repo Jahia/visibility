@@ -1,7 +1,6 @@
 package org.jahia.modules.visibility.job;
 
 import org.jahia.services.content.rules.OrphanedActionPurgeJob;
-import org.jahia.services.scheduler.BackgroundJob;
 import org.jahia.services.scheduler.SchedulerService;
 import org.jahia.settings.SettingsBean;
 import org.osgi.service.component.annotations.Activate;
@@ -36,12 +35,18 @@ public class VisibilityActionPurgeJob extends OrphanedActionPurgeJob {
     private SchedulerService schedulerService;
     private JobDetail jobDetail;
 
+    private static final String JOB_NAME = "visibilityActionPurgeJob";
+
     @Activate
     public void start() throws Exception {
-        jobDetail = BackgroundJob.createJahiaJob(JOB_DESCRIPTION, VisibilityActionPurgeJob.class);
-        jobDetail.setGroup(JOB_GROUP);
+        // Fixed name -> can be retrieved after restart
+        jobDetail = new JobDetail(JOB_NAME, JOB_GROUP, VisibilityActionPurgeJob.class, false, true, false);
+        jobDetail.setDescription(JOB_DESCRIPTION);
+
         jobDetail.getJobDataMap().put(JOB_GROUP_NAMES_KEY, JOB_GROUP_NAMES);
-        if (schedulerService.getAllJobs(jobDetail.getGroup()).isEmpty() && SettingsBean.getInstance().isProcessingServer()) {
+        if (SettingsBean.getInstance().isProcessingServer()) {
+            // Delete the old job at startup if exists
+            schedulerService.getScheduler().deleteJob(JOB_NAME, JOB_GROUP);
             Trigger trigger = new CronTrigger(CRON_TRIGGER_NAME, jobDetail.getGroup(), CRON_EXPRESSION);
             schedulerService.getScheduler().scheduleJob(jobDetail, trigger);
         }
@@ -49,7 +54,10 @@ public class VisibilityActionPurgeJob extends OrphanedActionPurgeJob {
 
     @Deactivate
     public void stop() throws Exception {
-        if (!schedulerService.getAllJobs(jobDetail.getGroup()).isEmpty() && SettingsBean.getInstance().isProcessingServer()) {
+        if (schedulerService.getScheduler() == null) {
+            return;
+        }
+        if (SettingsBean.getInstance().isProcessingServer()) {
             schedulerService.getScheduler().deleteJob(jobDetail.getName(), jobDetail.getGroup());
         }
     }
