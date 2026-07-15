@@ -1,71 +1,21 @@
 package org.jahia.modules.visibility.job;
 
 import org.jahia.services.content.rules.OrphanedActionPurgeJob;
-import org.jahia.services.scheduler.SchedulerService;
-import org.jahia.settings.SettingsBean;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.Trigger;
 
 import java.util.Set;
 
 /**
  * Background task that purges orphaned visibility actions (in case the corresponding node was deleted).
+ * <p>
+ * <b>NB:</b> This job is instantiated directly by Quartz, so OSGi dependency injection is not available here.
+ * Its scheduling (and unscheduling) is handled by the OSGi component {@link VisibilityActionPurgeJobRegistration}.
  *
  * @author Sergiy Shyrkov
  * @author Jerome Blanchard
+ * @see VisibilityActionPurgeJobRegistration
  */
-@Component(immediate = true)
 public class VisibilityActionPurgeJob extends OrphanedActionPurgeJob {
-
-    private static final String JOB_DESCRIPTION = "Cancels (unschedules) and removes orphaned visibility action jobs in case the corresponding node is no longer present";
-    private static final String JOB_GROUP = "Maintenance";
-    private static final String CRON_TRIGGER_NAME = "VisibilityActionPurgeJobTrigger";
-    private static final String CRON_EXPRESSION = "0 5 * * * ?";
-    private static final String JOB_GROUP_NAMES_KEY = "jobGroupNames";
-    private static final Set<String> JOB_GROUP_NAMES = Set.of("ActionJob.startDateVisibilityAction", "ActionJob.endDateVisibilityAction",
-                    "ActionJob.startDayOfWeekVisibilityAction", "ActionJob.endDayOfWeekVisibilityAction",
-                    "ActionJob.startTimeOfDayVisibilityAction", "ActionJob.endTimeOfDayVisibilityAction");
-
-    private SchedulerService schedulerService;
-    private JobDetail jobDetail;
-
-    private static final String JOB_NAME = "visibilityActionPurgeJob";
-
-    @Activate
-    public void start() throws Exception {
-        // Fixed name -> can be retrieved after restart
-        jobDetail = new JobDetail(JOB_NAME, JOB_GROUP, VisibilityActionPurgeJob.class, false, true, false);
-        jobDetail.setDescription(JOB_DESCRIPTION);
-
-        jobDetail.getJobDataMap().put(JOB_GROUP_NAMES_KEY, JOB_GROUP_NAMES);
-        if (SettingsBean.getInstance().isProcessingServer()) {
-            // Delete the old job at startup if exists
-            schedulerService.getScheduler().deleteJob(JOB_NAME, JOB_GROUP);
-            Trigger trigger = new CronTrigger(CRON_TRIGGER_NAME, jobDetail.getGroup(), CRON_EXPRESSION);
-            schedulerService.getScheduler().scheduleJob(jobDetail, trigger);
-        }
-    }
-
-    @Deactivate
-    public void stop() throws Exception {
-        if (schedulerService.getScheduler() == null) {
-            return;
-        }
-        if (SettingsBean.getInstance().isProcessingServer()) {
-            schedulerService.getScheduler().deleteJob(jobDetail.getName(), jobDetail.getGroup());
-        }
-    }
-
-    @Reference
-    public void setSchedulerService(SchedulerService schedulerService) {
-        this.schedulerService = schedulerService;
-    }
 
     @Override
     protected Set<String> getJobGroupNames(JobDataMap data) {
@@ -76,5 +26,4 @@ public class VisibilityActionPurgeJob extends OrphanedActionPurgeJob {
             return super.getJobGroupNames(data);
         }
     }
-
 }
