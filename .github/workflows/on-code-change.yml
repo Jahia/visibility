@@ -30,11 +30,27 @@ jobs:
           auditci_level: critical
 
   build:
-    name: Build Module
+    # TEMPORARY. Both legs build this module identically; the only difference is the image the job
+    # runs in, so the time to start the container is the cost of the Maven cache it carries.
+    # The two run together, on one commit, so the runner and the moment are the same for both.
+    #   baseline: what main publishes today
+    #   census:   the same image warmed for the 26 versions the census proposes
+    # Both are resolute, so the base image is not part of the difference.
+    name: Build Module (${{ matrix.label }})
     needs: update-signature
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: baseline
+            image: ghcr.io/jahia/jahia-docker-mvn-cache:11-jdk-resolute-mvn-loaded
+            suffix: ""
+          - label: census
+            image: ghcr.io/jahia/jahia-docker-mvn-cache:11-jdk-resolute-mvn-loaded-pr-39
+            suffix: "-census"
     container:
-      image: ghcr.io/jahia/jahia-docker-mvn-cache:11-jdk-noble-mvn-loaded
+      image: ${{ matrix.image }}
       credentials:
         username: ${{ secrets.GH_PACKAGES_USERNAME }}
         password: ${{ secrets.GH_PACKAGES_TOKEN }}
@@ -45,6 +61,8 @@ jobs:
           nexus_username: ${{ secrets.NEXUS_USERNAME }}
           nexus_password: ${{ secrets.NEXUS_PASSWORD }}
           module_id: visibility
+          # The baseline leg keeps the default name, so the Sonar job below still finds it.
+          github_artifact_suffix: ${{ matrix.suffix }}
 
   sonar-analysis:
     name: Sonar Analysis
