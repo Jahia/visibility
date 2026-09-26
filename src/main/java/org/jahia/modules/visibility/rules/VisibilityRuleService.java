@@ -14,6 +14,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import javax.jcr.RepositoryException;
 import java.io.StringReader;
@@ -117,7 +118,10 @@ public class VisibilityRuleService extends ModuleGlobalObject {
     private Calendar[] parseStartAndEndDates(String ruleSettingsXml) {
         Calendar[] dates = null;
         try {
-            Document document = new SAXReader().read(new StringReader(ruleSettingsXml));
+            SAXReader reader = new SAXReader();
+            reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            Document document = reader.read(new StringReader(ruleSettingsXml));
+            
             Element root = document.getRootElement();
             if (root != null) {
                 Element el = root.element(INHERIT_FROM_PARENT);
@@ -157,6 +161,8 @@ public class VisibilityRuleService extends ModuleGlobalObject {
                 }
             }
         } catch (DocumentException e) {
+            LOGGER.error("Error reading legacy rule settings: \n{}", ruleSettingsXml, e);
+        } catch (SAXException e) {
             LOGGER.error("Error reading legacy rule settings: \n{}", ruleSettingsXml, e);
         }
         LOGGER.debug("Parsed visibility dates: {}", Arrays.deepToString(dates));
